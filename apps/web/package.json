@@ -10,6 +10,7 @@
     "test": "npx cypress verify & cypress run --component"
   },
   "dependencies": {
+    "@heroicons/react": "^2.1.5",
     "cross-env": "^7.0.3",
     "next": "14.0.4",
     "react": "^18",
