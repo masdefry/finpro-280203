@@ -4,6 +4,8 @@ interface User {
   id: number;
   email: string;
   name: string;
+  phone?: string;   // Tambahkan field phone
+  address?: string; // Tambahkan field address
 }
 
 interface AuthState {
@@ -40,6 +42,16 @@ const authSlice = createSlice({
         localStorage.setItem('user', JSON.stringify(action.payload.user));
       }
     },
+    updateProfile(state, action: PayloadAction<{ phone?: string; address?: string }>) {
+      if (state.user) {
+        state.user.phone = action.payload.phone ?? state.user.phone;
+        state.user.address = action.payload.address ?? state.user.address;
+
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('user', JSON.stringify(state.user));
+        }
+      }
+    },
     logout(state) {
       state.token = null;
       state.user = null;
@@ -64,5 +76,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { loginSuccess, logout, rehydrate } = authSlice.actions;
+export const { loginSuccess, updateProfile, logout, rehydrate } = authSlice.actions;
 export default authSlice.reducer;

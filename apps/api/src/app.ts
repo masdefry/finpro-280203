@@ -1,7 +1,8 @@
 import express, { json, urlencoded, Express, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import { PORT } from './config';
-import authRouter from './routers/auth.router'; // Import authRouter
+import authRouter from './routers/auth.router'; 
+
 
 export default class App {
   private app: Express;
@@ -45,7 +46,7 @@ export default class App {
   // Definisi semua routes
   private routes(): void {
     // Menambahkan auth router
-    this.app.use('/api/auth', authRouter); 
+    this.app.use('/api/auth', authRouter);
 
     // Default route
     this.app.get('/api', (req: Request, res: Response) => {

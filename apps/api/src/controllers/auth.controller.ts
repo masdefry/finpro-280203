@@ -8,9 +8,9 @@ const prisma = new PrismaClient();
 const secretKey = process.env.JWT_SECRET || 'your_secret_key';
 const frontendURL = process.env.FRONTEND_URL || 'http://localhost:3000';
 
+// Definisikan dan export UserPayload
 export interface UserPayload {
   id: number;
-  role: string;
 }
 
 // Register user
@@ -61,7 +61,7 @@ export const login = async (req: Request, res: Response): Promise<Response> => {
       return res.status(400).json({ message: 'Invalid email or password' });
     }
 
-    // Cek apakah email sudah diverifikasi
+    // Check if email is verified
     if (!user.isEmailVerified) {
       return res.status(400).json({ message: 'Please verify your email before logging in' });
     }
@@ -73,7 +73,7 @@ export const login = async (req: Request, res: Response): Promise<Response> => {
     }
 
     // Create a token
-    const token = jwt.sign({ id: user.id, role: user.role } as UserPayload, secretKey, { expiresIn: '1h' });
+    const token = jwt.sign({ id: user.id } as UserPayload, secretKey, { expiresIn: '1h' });
 
     return res.status(200).json({ message: 'Login successful', token, user });
   } catch (error) {
@@ -118,6 +118,25 @@ export const getCurrentUser = async (req: Request, res: Response): Promise<Respo
 
     return res.status(200).json({ user });
   } catch (error) {
+    return res.status(500).json({ message: 'Server error', error });
+  }
+};
+
+// Update phone and address (after login)
+export const updateProfile = async (req: Request, res: Response): Promise<Response> => {
+  const { phone, address } = req.body;
+  const userId = req.user?.id;
+
+  try {
+    // Update user's phone and address
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: { phone, address },
+    });
+
+    return res.status(200).json({ message: 'Profile updated successfully', user: updatedUser });
+  } catch (error) {
+    console.error('Error updating profile:', error);
     return res.status(500).json({ message: 'Server error', error });
   }
 };
