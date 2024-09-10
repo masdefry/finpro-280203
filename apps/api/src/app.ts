@@ -2,7 +2,7 @@ import express, { json, urlencoded, Express, Request, Response, NextFunction } f
 import cors from 'cors';
 import { PORT } from './config';
 import authRouter from './routers/auth.router'; 
-
+import productRouter from './routers/product.router';
 
 export default class App {
   private app: Express;
@@ -45,8 +45,10 @@ export default class App {
 
   // Definisi semua routes
   private routes(): void {
-    // Menambahkan auth router
+
+    // Menambahkan router
     this.app.use('/api/auth', authRouter);
+    this.app.use('/api', productRouter);
 
     // Default route
     this.app.get('/api', (req: Request, res: Response) => {
