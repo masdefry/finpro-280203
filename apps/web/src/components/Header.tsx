@@ -6,7 +6,7 @@ import { logout } from '../redux/slices/authSlices';
 import { RootState } from '../redux/store';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation'; // Import useRouter for navigation
-import { FaGamepad, FaUser, FaSignOutAlt, FaBars } from 'react-icons/fa';
+import { FaGamepad, FaUser, FaSignOutAlt, FaBars, FaFileInvoice } from 'react-icons/fa';
 
 export const Header = () => {
   const dispatch = useDispatch();
@@ -70,11 +70,8 @@ export const Header = () => {
           <Link href="/about" className="hover:text-yellow-400 transition">
             About
           </Link>
-          <Link href="/product" className="hover:text-yellow-400 transition">
-            Product
-          </Link>
-          <Link href="/contact" className="hover:text-yellow-400 transition">
-            Contact
+          <Link href="/invoice" className="hover:text-yellow-400 transition">
+            Invoice
           </Link>
         </nav>
 
@@ -115,6 +112,9 @@ export const Header = () => {
               <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 text-black z-50">
                 <Link href="/profile" className="block px-4 py-2 hover:bg-gray-200">
                   <FaUser className="inline-block mr-2" /> Profile
+                </Link>
+                <Link href="/invoice" className="block px-4 py-2 hover:bg-gray-200">
+                  <FaFileInvoice className="inline-block mr-2" /> Invoice
                 </Link>
                 <button
                   onClick={handleLogout}

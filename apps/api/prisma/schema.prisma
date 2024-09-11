@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,37 +8,67 @@ datasource db {
 }
 
 model User {
-  id              Int      @id @default(autoincrement())
+  id              Int       @id @default(autoincrement())
   name            String
-  email           String   @unique
+  email           String    @unique
   password        String
   phone           String?  
   address         String?  
-  isEmailVerified Boolean  @default(false)   
+  isEmailVerified Boolean   @default(false)   
   emailVerifyToken String?                    
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  invoices        Invoice[] 
 }
 
-model Product {
-  id          Int       @id @default(autoincrement())
-  name        String    @unique
-  description String
-  price       Float
-  imageUrl    String?
-  category    Category  @relation(fields: [categoryId], references: [id])
-  categoryId  Int
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+model Invoice {
+  id                 Int          @id @default(autoincrement())
+  user               User         @relation(fields: [userId], references: [id])
+  userId             Int
+
+  fromName           String       @default("")
+  fromEmail          String       @default("")
+  fromAddress        String       @default("")
+  fromPhone          String?  
+  fromBusinessNumber String?
+
+  billToName         String       @default("")
+  billToEmail        String       @default("")
+  billToAddress      String       @default("")
+  billToPhone        String?
+  billToMobile       String?
+  billToFax          String?
+
+  invoiceTitle       String       @default("Invoice") 
+  description        String?      // Overall invoice description
+
+  invoiceNumber      String       @unique
+  date               DateTime     @default(now()) 
+  terms              String?
+
+  subtotal           Float        @default(0)
+  totalAmount        Float        @default(0)
+  balanceDue         Float        @default(0)
+
+  notes              String?      // Additional notes for the invoice
+  
+  items              InvoiceItem[]  // One-to-many relationship with InvoiceItem
+  
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
 }
 
-model Category {
-  id          Int       @id @default(autoincrement())
-  name        String    @unique
-  products    Product[] // One-to-many relationship with Product
+model InvoiceItem {
+  id          Int        @id @default(autoincrement())
+  invoice     Invoice     @relation(fields: [invoiceId], references: [id])
+  invoiceId   Int
+
+  description String?     
+  quantity    Int         
+  rate        Float       
+  amount      Float       
+  
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
 }
-
-
-
-
-

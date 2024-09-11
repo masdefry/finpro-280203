@@ -2,7 +2,7 @@ import express, { json, urlencoded, Express, Request, Response, NextFunction } f
 import cors from 'cors';
 import { PORT } from './config';
 import authRouter from './routers/auth.router'; 
-import productRouter from './routers/product.router';
+import invoiceRouter from './routers/invoice.router';
 
 export default class App {
   private app: Express;
@@ -48,7 +48,7 @@ export default class App {
 
     // Menambahkan router
     this.app.use('/api/auth', authRouter);
-    this.app.use('/api', productRouter);
+    this.app.use('/api/invoices', invoiceRouter);
 
     // Default route
     this.app.get('/api', (req: Request, res: Response) => {
