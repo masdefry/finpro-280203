@@ -4,8 +4,8 @@ interface User {
   id: number;
   email: string;
   name: string;
-  phone?: string;   // Tambahkan field phone
-  address?: string; // Tambahkan field address
+  phone?: string;   
+  address?: string; 
 }
 
 interface AuthState {
