@@ -1,7 +1,8 @@
-'use client'
+'use client';
 
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { FaFeatherAlt, FaUser, FaSignOutAlt, FaBars, FaFileInvoice, FaUserCircle } from 'react-icons/fa';
 
 const ReceiptInvoicePage = ({ params }: { params: { invoiceNumber: string } }) => {
   const { invoiceNumber } = params;  // Get invoiceNumber from URL params
@@ -31,12 +32,21 @@ const ReceiptInvoicePage = ({ params }: { params: { invoiceNumber: string } }) =
       {/* Container */}
       <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
         {/* Invoice Header */}
-        <header className="flex justify-between items-center bg-gradient-to-r from-blue-500 to-blue-700 p-6 text-white">
-          <h1 className="text-4xl font-bold">Invoice Receipt</h1>
-          <button className="bg-white text-blue-600 px-6 py-2 rounded-md shadow hover:bg-gray-100">
-            Print Invoice
-          </button>
-        </header>
+<header className="flex justify-between items-center bg-gradient-to-r from-gray-800 to-gray-600 p-6 text-white shadow-lg">
+  <div className="flex items-center space-x-3">
+    {/* Feather Icon (can replace with a custom SVG or image) */}
+    <FaFeatherAlt className="text-yellow-400 w-8 h-8" />
+    {/* Brand Name */}
+    <h1 className="text-4xl font-extrabold tracking-wide">Finquill Invoice</h1>
+  </div>
+  <button className="flex items-center bg-white text-gray-800 px-6 py-2 rounded-md shadow-lg hover:bg-gray-100 transition duration-300">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 mr-2">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v8m-4-4h8" />
+    </svg>
+    Print Invoice
+  </button>
+</header>
+
 
         {/* Invoice Metadata */}
         <section className="p-6">
@@ -79,7 +89,7 @@ const ReceiptInvoicePage = ({ params }: { params: { invoiceNumber: string } }) =
           <h2 className="text-2xl font-semibold mb-4 text-gray-700">Invoice Items</h2>
           <div className="overflow-hidden shadow rounded-lg">
             <table className="min-w-full bg-white">
-              <thead className="bg-gray-100">
+              <thead className="bg-gradient-to-r from-gray-50 to-gray-200">
                 <tr>
                   <th className="px-6 py-3 text-left text-sm font-semibold text-gray-600">Description</th>
                   <th className="px-6 py-3 text-center text-sm font-semibold text-gray-600">Quantity</th>
@@ -123,7 +133,7 @@ const ReceiptInvoicePage = ({ params }: { params: { invoiceNumber: string } }) =
 
         {/* Footer Notes */}
         <section className="px-6 pb-6">
-          <h3 className="text-lg font-semibold text-gray-800">Additional Notes:</h3>
+          <h3 className="text-lg font-semibold  text-gray-800">Additional Notes:</h3>
           <p className="text-gray-600 mt-2">{invoice.notes || 'No additional notes.'}</p>
         </section>
       </div>

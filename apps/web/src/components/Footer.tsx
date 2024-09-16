@@ -1,21 +1,21 @@
-import { FaFacebook, FaTwitter, FaLinkedin, FaInstagram, FaYoutube, FaTiktok, FaGamepad } from 'react-icons/fa';
+import { FaFacebook, FaTwitter, FaLinkedin, FaInstagram, FaYoutube, FaTiktok, FaFeatherAlt } from 'react-icons/fa';
 import { AiOutlineMail } from 'react-icons/ai';
 
 export const Footer = () => {
   return (
-    <footer className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-white py-10 mt-0 mb-0 pb-0">
+    <footer className="bg-gradient-to-r from-gray-800 to-gray-600 text-white py-10">
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 px-4">
         
-        {/* About Gamer's Haven */}
+        {/* About Finquill */}
         <div className="space-y-4">
-          <h3 className="text-2xl font-semibold mb-4">Gamer's Haven</h3>
+          <h3 className="text-3xl font-semibold mb-4">Finquill</h3>
           <p className="text-gray-400">
-            Gamer's Haven is your ultimate destination for premium gaming products. Whether you're a casual player or a competitive pro, we have everything you need to enhance your gaming experience.
+            Finquill is your go-to solution for sleek and efficient invoicing. Whether you're a freelancer or a thriving business, Finquill ensures your invoicing process is seamless, stylish, and professional.
           </p>
-          <p className="text-gray-400">© 2024 Gamer's Haven. All rights reserved.</p>
+          <p className="text-gray-400">© 2024 Finquill. All rights reserved.</p>
           <p className="text-gray-400 flex items-center">
             <AiOutlineMail className="mr-2" />
-            support@gamershaven.com
+            support@finquill.com
           </p>
           <p className="text-gray-400">Phone: +1 800 987 6543</p>
         </div>
@@ -24,8 +24,8 @@ export const Footer = () => {
         <div>
           <h3 className="text-2xl font-semibold mb-4">Quick Links</h3>
           <nav className="space-y-2">
-            <a href="/shop" className="block hover:text-gray-200 text-gray-400 transition">Shop</a>
-            <a href="/deals" className="block hover:text-gray-200 text-gray-400 transition">Deals</a>
+            <a href="/features" className="block hover:text-gray-200 text-gray-400 transition">Features</a>
+            <a href="/pricing" className="block hover:text-gray-200 text-gray-400 transition">Pricing</a>
             <a href="/about" className="block hover:text-gray-200 text-gray-400 transition">About Us</a>
             <a href="/contact" className="block hover:text-gray-200 text-gray-400 transition">Contact Us</a>
           </nav>
@@ -59,7 +59,7 @@ export const Footer = () => {
       </div>
 
       {/* Additional Links and Footer Bottom */}
-      <div className="bg-gray-900 border-t border-gray-700 mt-0 pt-6 pb-0">
+      <div className="bg-gradient-to-r from-gray-800 to-gray-600 mt-10 pt-6 pb-6">
         <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 px-4">
           {/* Extra Links */}
           <nav className="text-gray-400 flex justify-center md:justify-start space-x-6">
@@ -71,8 +71,8 @@ export const Footer = () => {
           
           {/* Brand Logo or Mascot */}
           <div className="flex justify-center md:justify-end items-center space-x-2 text-yellow-400">
-            <FaGamepad className="h-10 w-10" />
-            <span className="text-xl font-bold">Gamer's Haven</span>
+            <FaFeatherAlt className="h-10 w-10" />
+            <span className="text-xl font-bold">Finquill</span>
           </div>
         </div>
       </div>
