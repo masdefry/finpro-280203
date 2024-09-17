@@ -3,13 +3,16 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import { useSelector } from 'react-redux';  // Import useSelector to access Redux state
-import { RootState } from '../../redux/store';       // Adjust the path to your store setup
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux/store'; 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { FaTrash } from 'react-icons/fa'; // Import icon trash
 
 interface Item {
   description: string;
   quantity: number;
-  rate: string; // Add rate for unit price
+  rate: string;
   amount: string;
 }
 
@@ -57,36 +60,32 @@ const InvoicePage = () => {
     totalAmount: '0',
     balanceDue: '',
     notes: '',
-    items: [{ description: '', quantity: 1, rate: '', amount: '' }] // Define initial value as Item[]
+    items: [{ description: '', quantity: 1, rate: '', amount: '' }]
   });
 
   const router = useRouter();
 
-  // Fetch the logged-in user from Redux
-  const user = useSelector((state: RootState) => state.auth.user);
+  const { user, token } = useSelector((state: RootState) => state.auth);
 
   useEffect(() => {
     const generateInvoiceNumber = () => {
-        const date = new Date();
-        const year = date.getFullYear().toString().slice(-2);
-        const month = ('0' + (date.getMonth() + 1)).slice(-2);
-        const day = ('0' + date.getDate()).slice(-2);
-        
-        const randomNum = Math.floor(Math.random() * 1000);  
-        const invoiceNumber = `INV${year}${month}${day}-${randomNum}`;
-        setFormData(prevFormData => ({ ...prevFormData, invoiceNumber, date: date.toISOString().substring(0, 10) }));
-      };
-      
+      const date = new Date();
+      const year = date.getFullYear().toString().slice(-2);
+      const month = ('0' + (date.getMonth() + 1)).slice(-2);
+      const day = ('0' + date.getDate()).slice(-2);
+      const randomNum = Math.floor(Math.random() * 1000);
+      const invoiceNumber = `INV${year}${month}${day}-${randomNum}`;
+      setFormData(prevFormData => ({ ...prevFormData, invoiceNumber, date: date.toISOString().substring(0, 10) }));
+    };
 
     generateInvoiceNumber();
   }, []);
 
-  // When the user state is available, set the userId in the form data
   useEffect(() => {
     if (user) {
       setFormData(prevFormData => ({
         ...prevFormData,
-        userId: user.id.toString(),  // Ensure userId is a string
+        userId: user.id.toString(),
       }));
     }
   }, [user]);
@@ -102,7 +101,7 @@ const InvoicePage = () => {
   const handleItemChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     const newItems = [...formData.items];
-  
+
     if (name === 'amount' || name === 'rate') {
       const formattedValue = value.replace(/[^0-9.]/g, '');
       if (name === 'amount') {
@@ -116,12 +115,12 @@ const InvoicePage = () => {
     } else if (name === 'description') {
       newItems[index].description = value;
     }
-  
+
     setFormData({
       ...formData,
       items: newItems,
     });
-  
+
     calculateTotals(newItems);
   };
 
@@ -170,7 +169,7 @@ const InvoicePage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-  
+
     const payload = {
       ...formData,
       items: formData.items.map(item => ({
@@ -183,28 +182,28 @@ const InvoicePage = () => {
       totalAmount: Number(formData.totalAmount),
       balanceDue: Number(formData.balanceDue),
     };
-  
-    console.log('Sanitized form data:', payload);
-  
+
     try {
-      await axios.post('http://localhost:8000/api/invoices', payload);
-      alert('Invoice successfully created!');
-      router.push('/invoices');
+      await axios.post('http://localhost:8000/api/invoices', payload, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Menggunakan token dari Redux
+        },
+      });
+      toast.success('Invoice successfully created!'); // Show success toast
+      setTimeout(() => router.push('/invoice'), 2000); // Navigate after delay
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
-        console.error('Error creating invoice:', error.response?.data || error.message);
-        alert(`Error creating invoice: ${error.response?.data?.message || error.message}`);
+        toast.error(`Error creating invoice: ${error.response?.data?.message || error.message}`); // Show error toast
       } else {
-        console.error('Unexpected error:', error);
-        alert('An unexpected error occurred.');
+        toast.error('An unexpected error occurred.');
       }
     }
   };
-  
-  
+
   return (
     <div className="min-h-screen bg-gray-100 py-10 px-4 lg:px-16">
       <div className="max-w-6xl mx-auto bg-white p-10 shadow-lg rounded-lg">
+        <ToastContainer /> {/* Toastify container */}
         <header className="flex justify-between items-center mb-10">
           <h1 className="text-4xl font-bold">Invoice</h1>
           <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">Email Invoice</button>
@@ -393,7 +392,7 @@ const InvoicePage = () => {
                     onClick={() => removeItem(index)}
                     className="text-red-500"
                   >
-                    Remove
+                    <FaTrash />
                   </button>
                 </div>
               </div>

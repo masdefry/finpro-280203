@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
-import { FaFeatherAlt, FaUserAlt } from 'react-icons/fa'; // Feather icon for Finquill
+import { FaFeatherAlt } from 'react-icons/fa'; // Feather icon for Finquill
 
 interface Client {
   billToName: string;
@@ -16,13 +16,19 @@ interface Client {
 const ClientListPage = () => {
   const [clients, setClients] = useState<Client[]>([]);
   const [loading, setLoading] = useState(true);
-  const { user } = useSelector((state: RootState) => state.auth);
+
+  // Ambil token dan user dari Redux store
+  const { token, user } = useSelector((state: RootState) => state.auth);
 
   useEffect(() => {
     const fetchClients = async () => {
-      if (user && user.id) {
+      if (user && user.id && token) {
         try {
-          const response = await axios.get(`http://localhost:8000/api/invoices/clients/${user.id}`);
+          const response = await axios.get(`http://localhost:8000/api/invoices/clients/${user.id}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,  // Gunakan token di header Authorization
+            },
+          });
           setClients(response.data);
         } catch (error) {
           console.error('Error fetching clients:', error);
@@ -32,7 +38,7 @@ const ClientListPage = () => {
       }
     };
     fetchClients();
-  }, [user]);  
+  }, [user, token]);  // Gunakan user dan token sebagai dependensi useEffect
 
   if (loading) {
     return (
@@ -53,7 +59,7 @@ const ClientListPage = () => {
   }
 
   return (
-    <div className="min-h-screen  py-10 px-4 lg:px-16">
+    <div className="min-h-screen py-10 px-4 lg:px-16">
       <div className="max-w-7xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
         {/* Header */}
         <header className="flex justify-between items-center bg-gradient-to-r from-gray-800 to-gray-600 p-6 text-white">

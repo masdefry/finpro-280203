@@ -54,9 +54,9 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-900">
+    <div className="min-h-screen flex items-center justify-center bg-gray-900 px-4">
       <ToastContainer />
-      <div className="bg-gray-800 p-8 rounded-xl shadow-2xl w-full max-w-lg transition-transform transform hover:scale-105 duration-300">
+      <div className="bg-gray-800 p-6 md:p-8 rounded-xl shadow-2xl w-full max-w-md transition-transform transform hover:scale-105 duration-300">
         <h2 className="text-3xl font-extrabold text-center text-white mb-6">Create Your Account</h2>
         
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -114,7 +114,6 @@ const RegisterPage = () => {
           </button>
         </form>
 
-        {/* Tampilkan pesan "Check your email" */}
         <div className="mt-4 text-center">
           <p className="text-white text-lg">Please check your email for the verification link.</p>
         </div>
