@@ -5,13 +5,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../redux/slices/authSlices'; 
 import { RootState } from '../redux/store';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation'; // Import useRouter for navigation
-import { FaGamepad, FaUser, FaSignOutAlt, FaBars, FaFileInvoice } from 'react-icons/fa';
+import { useRouter } from 'next/navigation';
+import { FaFeatherAlt, FaUser, FaSignOutAlt, FaBars, FaFileInvoice, FaUserCircle, FaAddressBook } from 'react-icons/fa'; // Adding FaAddressBook for client list icon
 
 export const Header = () => {
   const dispatch = useDispatch();
   const { user, token } = useSelector((state: RootState) => state.auth);
-  const router = useRouter(); // Use Next.js router for navigation
+  const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState<{ name?: string; email?: string } | null>(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -46,7 +46,7 @@ export const Header = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     dispatch(logout());
-    router.push('/login'); // Redirect to the login page after logout
+    router.push('/login');
   };
 
   const toggleDropdown = () => {
@@ -54,23 +54,23 @@ export const Header = () => {
   };
 
   return (
-    <header className="bg-gray-900 text-white py-4 shadow-lg">
+    <header className="bg-gradient-to-r from-gray-800 to-gray-600 text-white py-4 shadow-lg">
       <div className="container mx-auto flex justify-between items-center px-4">
         {/* Logo and Title */}
-        <div className="flex items-center space-x-2 text-2xl font-bold">
-          <FaGamepad className="text-yellow-400" />
-          <span>Gamer's Haven</span>
+        <div className="flex items-center space-x-2 text-3xl font-bold tracking-wide">
+          <FaFeatherAlt className="text-yellow-400 w-8 h-8" />
+          <span className="text-white text-4xl">Finquill</span>
         </div>
 
         {/* Navigation Links */}
-        <nav className="space-x-6 hidden md:flex">
-          <Link href="/" className="hover:text-yellow-400 transition">
+        <nav className="hidden md:flex space-x-8">
+          <Link href="/" className="hover:text-yellow-400 transition text-lg">
             Home
           </Link>
-          <Link href="/about" className="hover:text-yellow-400 transition">
+          <Link href="/about" className="hover:text-yellow-400 transition text-lg">
             About
           </Link>
-          <Link href="/invoice" className="hover:text-yellow-400 transition">
+          <Link href="/invoice" className="hover:text-yellow-400 transition text-lg">
             Invoice
           </Link>
         </nav>
@@ -87,10 +87,10 @@ export const Header = () => {
           <div className="relative inline-block">
             <button
               onClick={toggleDropdown}
-              className="flex items-center space-x-2 focus:outline-none"
+              className="flex items-center space-x-2 focus:outline-none hover:text-yellow-400 transition"
             >
-              <FaUser className="text-white w-5 h-5" />
-              <span>{currentUser?.name || currentUser?.email}</span>
+              <FaUserCircle className="text-white w-8 h-8" />
+              <span className="text-lg">{currentUser?.name || currentUser?.email}</span>
               <svg
                 className="w-5 h-5"
                 fill="none"
@@ -114,7 +114,10 @@ export const Header = () => {
                   <FaUser className="inline-block mr-2" /> Profile
                 </Link>
                 <Link href="/invoice" className="block px-4 py-2 hover:bg-gray-200">
-                  <FaFileInvoice className="inline-block mr-2" /> Invoice
+                  <FaFileInvoice className="inline-block mr-2" /> Invoices
+                </Link>
+                <Link href="/client-list" className="block px-4 py-2 hover:bg-gray-200"> {/* New Client List Link */}
+                  <FaAddressBook className="inline-block mr-2" /> Client List
                 </Link>
                 <button
                   onClick={handleLogout}
@@ -126,11 +129,11 @@ export const Header = () => {
             )}
           </div>
         ) : (
-          <div className="space-x-4 hidden md:flex">
-            <Link href="/login" className="hover:text-yellow-400 transition">
+          <div className="hidden md:flex space-x-6">
+            <Link href="/login" className="hover:text-yellow-400 transition text-lg">
               Login
             </Link>
-            <Link href="/register" className="hover:text-yellow-400 transition">
+            <Link href="/register" className="hover:text-yellow-400 transition text-lg">
               Register
             </Link>
           </div>

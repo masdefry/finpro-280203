@@ -77,16 +77,16 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-900">
+    <div className="min-h-screen flex items-center justify-center bg-white-900">
       <ToastContainer />
-      <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-lg transform transition-transform hover:scale-105 duration-300">
+      <div className="bg-gray-900 p-8 rounded-2xl shadow-xl w-full max-w-lg transform transition-transform hover:scale-105 duration-300">
         {/* Profile Picture Section */}
         <div className="flex flex-col items-center mb-6">
           <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center mb-4">
             <FaUser className="text-gray-600 text-6xl" />
           </div>
-          <h2 className="text-3xl font-extrabold text-gray-700">{user?.name || 'User'}</h2>
-          <p className="text-gray-500">{user?.email || 'example@example.com'}</p>
+          <h2 className="text-3xl font-extrabold text-gray-100">{user?.name || 'User'}</h2>
+          <p className="text-gray-100">{user?.email || 'example@example.com'}</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
