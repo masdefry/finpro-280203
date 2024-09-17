@@ -5,7 +5,7 @@ import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store'; // Import store to get Redux state
-import { FaTrash, FaFileInvoice } from 'react-icons/fa'; // Import icons for remove and view invoice
+import { FaTrash, FaFileInvoice,FaFeatherAlt } from 'react-icons/fa'; // Import icons for remove and view invoice
 
 interface Invoice {
   id: number;
@@ -44,18 +44,18 @@ const InvoiceListPage = () => {
     );
   });
 
-  // Handle invoice removal
-  const handleRemoveInvoice = async (id: number) => {
-    const confirmDelete = window.confirm('Are you sure you want to delete this invoice?');
-    if (confirmDelete) {
-      try {
-        await axios.delete(`http://localhost:8000/api/invoices/${id}`);
-        setInvoices((prev) => prev.filter((invoice) => invoice.id !== id));
-      } catch (error) {
-        console.error('Error deleting invoice:', error);
-      }
+// Handle invoice removal
+const handleRemoveInvoice = async (invoiceNumber: string) => {
+  const confirmDelete = window.confirm('Are you sure you want to delete this invoice?');
+  if (confirmDelete) {
+    try {
+      await axios.delete(`http://localhost:8000/api/invoices/${invoiceNumber}`);
+      setInvoices((prev) => prev.filter((invoice) => invoice.invoiceNumber !== invoiceNumber));
+    } catch (error) {
+      console.error('Error deleting invoice:', error);
     }
-  };
+  }
+};
 
   // Handle navigation to invoice receipt page
   const handleViewInvoice = (invoiceNumber: string) => {
@@ -66,6 +66,7 @@ const InvoiceListPage = () => {
     <div className="min-h-screen bg-gray-100 p-10">
       <div className="max-w-7xl mx-auto bg-white p-6 shadow-md rounded-lg">
         <header className="flex justify-between items-center mb-6">
+        <FaFeatherAlt className="text-yellow-400 w-8 h-8" />
           <h1 className="text-3xl font-bold">Invoices</h1>
           <button
             onClick={() => router.push('/new-invoice')}
@@ -131,7 +132,7 @@ const InvoiceListPage = () => {
 
                     {/* Remove Invoice Icon */}
                     <button
-                      onClick={() => handleRemoveInvoice(invoice.id)}
+                      onClick={() => handleRemoveInvoice(invoice.invoiceNumber)} 
                       className="text-red-500 hover:text-red-700"
                       title="Remove Invoice"
                     >

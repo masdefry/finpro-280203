@@ -6,7 +6,7 @@ import { logout } from '../redux/slices/authSlices';
 import { RootState } from '../redux/store';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { FaFeatherAlt, FaUser, FaSignOutAlt, FaBars, FaFileInvoice, FaUserCircle } from 'react-icons/fa'; // Modern icon for Finquill
+import { FaFeatherAlt, FaUser, FaSignOutAlt, FaBars, FaFileInvoice, FaUserCircle, FaAddressBook } from 'react-icons/fa'; // Adding FaAddressBook for client list icon
 
 export const Header = () => {
   const dispatch = useDispatch();
@@ -115,6 +115,9 @@ export const Header = () => {
                 </Link>
                 <Link href="/invoice" className="block px-4 py-2 hover:bg-gray-200">
                   <FaFileInvoice className="inline-block mr-2" /> Invoices
+                </Link>
+                <Link href="/client-list" className="block px-4 py-2 hover:bg-gray-200"> {/* New Client List Link */}
+                  <FaAddressBook className="inline-block mr-2" /> Client List
                 </Link>
                 <button
                   onClick={handleLogout}

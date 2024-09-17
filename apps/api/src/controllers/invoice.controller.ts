@@ -14,7 +14,6 @@ export const createInvoice = async (req: Request, res: Response) => {
     items
   } = req.body;
 
-  // Log the incoming request body for debugging
   console.log('Request body:', req.body);
 
   if (!userId || !fromName || !billToName || !items || items.length === 0) {
@@ -111,6 +110,42 @@ export const getInvoiceByInvoiceNumber = async (req: Request, res: Response) => 
   }
 };
 
+// Get clients (distinct) based on invoices for a specific user
+export const getClientsByUserId = async (req: Request, res: Response) => {
+  const { userId } = req.params;
+  console.log('Fetching clients for user:', userId);  // Logging untuk debugging
+
+  try {
+    // Cari invoice dengan userId tertentu dan ambil data klien secara unik
+    const clients = await prisma.invoice.findMany({
+      where: { userId: Number(userId) },  // Filter berdasarkan userId
+      distinct: ['billToName', 'billToEmail'],  // Pastikan klien unik berdasarkan nama dan email
+      select: {  // Pilih kolom yang dibutuhkan
+        billToName: true,
+        billToEmail: true,
+        billToAddress: true,
+        billToPhone: true,
+        billToMobile: true,
+        billToFax: true,
+      },
+    });
+
+    // Jika tidak ada klien yang ditemukan, kembalikan status 404
+    if (clients.length === 0) {
+      console.log(`No clients found for user ${userId}`);
+      return res.status(404).json({ message: 'No clients found' });
+    }
+
+    // Kembalikan daftar klien dalam bentuk JSON
+    res.status(200).json(clients);
+  } catch (error) {
+    // Error handling jika ada masalah saat query
+    console.error('Error fetching clients:', error);
+    res.status(500).json({ error: 'Failed to fetch clients' });
+  }
+};
+
+
 // Update an invoice by ID
 export const updateInvoice = async (req: Request, res: Response) => {
   const { id } = req.params;
@@ -127,7 +162,6 @@ export const updateInvoice = async (req: Request, res: Response) => {
   }
 
   try {
-    // Use a transaction to ensure invoice and items are updated together
     const updatedInvoice = await prisma.$transaction(async (prisma) => {
       const invoice = await prisma.invoice.update({
         where: { id: Number(id) },
@@ -155,12 +189,10 @@ export const updateInvoice = async (req: Request, res: Response) => {
         },
       });
 
-      // Delete existing items before re-adding
       await prisma.invoiceItem.deleteMany({
         where: { invoiceId: invoice.id },
       });
 
-      // Re-create Invoice Items
       const invoiceItems = items.map((item: any) => ({
         invoiceId: invoice.id,
         description: item.description,
@@ -183,18 +215,21 @@ export const updateInvoice = async (req: Request, res: Response) => {
   }
 };
 
-// Delete an invoice by ID
+
 export const deleteInvoice = async (req: Request, res: Response) => {
-  const { id } = req.params;
+  const { invoiceNumber } = req.params;
 
   try {
-    await prisma.invoice.delete({
-      where: { id: Number(id) },
+    const invoice = await prisma.invoice.delete({
+      where: { invoiceNumber: String(invoiceNumber) },
     });
 
-    res.status(204).send();
+    res.status(200).json({ message: 'Invoice deleted successfully' });
   } catch (error) {
     console.error('Error deleting invoice:', error);
     res.status(500).json({ error: 'Failed to delete invoice' });
   }
 };
+
+
+

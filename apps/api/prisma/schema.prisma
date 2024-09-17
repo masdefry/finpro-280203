@@ -53,7 +53,7 @@ model Invoice {
 
   notes              String?      // Additional notes for the invoice
   
-  items              InvoiceItem[]  // One-to-many relationship with InvoiceItem
+  items              InvoiceItem[]  // Relasi ke InvoiceItem
   
   createdAt          DateTime     @default(now())
   updatedAt          DateTime     @updatedAt
@@ -61,7 +61,7 @@ model Invoice {
 
 model InvoiceItem {
   id          Int        @id @default(autoincrement())
-  invoice     Invoice     @relation(fields: [invoiceId], references: [id])
+  invoice     Invoice     @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
   invoiceId   Int
 
   description String?     
@@ -72,3 +72,4 @@ model InvoiceItem {
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
 }
+
