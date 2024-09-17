@@ -62,7 +62,7 @@ export const Footer = () => {
       <div className="bg-gradient-to-r from-gray-800 to-gray-600 mt-10 pt-6 pb-6">
         <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 px-4">
           {/* Extra Links */}
-          <nav className="text-gray-400 flex justify-center md:justify-start space-x-6">
+          <nav className="text-gray-400 flex flex-wrap justify-center md:justify-start space-x-4 lg:space-x-6">
             <a href="/privacy" className="hover:text-gray-200 transition">Privacy Policy</a>
             <a href="/terms" className="hover:text-gray-200 transition">Terms of Service</a>
             <a href="/faq" className="hover:text-gray-200 transition">FAQs</a>
@@ -70,7 +70,7 @@ export const Footer = () => {
           </nav>
           
           {/* Brand Logo or Mascot */}
-          <div className="flex justify-center md:justify-end items-center space-x-2 text-yellow-400">
+          <div className="flex justify-center md:justify-end items-center space-x-2 text-yellow-400 mt-4 md:mt-0">
             <FaFeatherAlt className="h-10 w-10" />
             <span className="text-xl font-bold">Finquill</span>
           </div>

@@ -16,7 +16,6 @@ const RegisterPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [verificationLink, setVerificationLink] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,16 +34,12 @@ const RegisterPage = () => {
         password,
       });
 
-      const { emailVerifyToken, user } = response.data;
+      const { user } = response.data;
 
       // Simpan user di Redux store tanpa password
       dispatch(loginSuccess({ token: '', user: { name: user.name, email: user.email, id: user.id } }));
 
-      toast.success('Registration successful! Check your email for verification.');
-
-      // Set verification link jika ada dari backend
-      const link = `http://localhost:3000/verify-email?token=${emailVerifyToken}`;
-      setVerificationLink(link);
+      toast.success('Registration successful! Please check your email for verification.');
 
     } catch (error: any) {
       console.error('Error during registration:', error);
@@ -59,9 +54,9 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-900">
+    <div className="min-h-screen flex items-center justify-center bg-gray-900 px-4">
       <ToastContainer />
-      <div className="bg-gray-800 p-8 rounded-xl shadow-2xl w-full max-w-lg transition-transform transform hover:scale-105 duration-300">
+      <div className="bg-gray-800 p-6 md:p-8 rounded-xl shadow-2xl w-full max-w-md transition-transform transform hover:scale-105 duration-300">
         <h2 className="text-3xl font-extrabold text-center text-white mb-6">Create Your Account</h2>
         
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -119,11 +114,9 @@ const RegisterPage = () => {
           </button>
         </form>
 
-        {verificationLink && (
-          <div className="mt-4 text-center">
-            <a href={verificationLink} className="text-indigo-400 hover:underline" target="_blank" rel="noopener noreferrer">Click here to verify your email</a>
-          </div>
-        )}
+        <div className="mt-4 text-center">
+          <p className="text-white text-lg">Please check your email for the verification link.</p>
+        </div>
       </div>
     </div>
   );

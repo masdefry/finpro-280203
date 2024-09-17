@@ -2,18 +2,34 @@
 
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { FaFeatherAlt, FaUser, FaSignOutAlt, FaBars, FaFileInvoice, FaUserCircle } from 'react-icons/fa';
+import { FaFeatherAlt } from 'react-icons/fa';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../redux/store';
+import { toast, ToastContainer } from 'react-toastify'; // Import Toastify
+import 'react-toastify/dist/ReactToastify.css'; // Import Toastify styles
 
 const ReceiptInvoicePage = ({ params }: { params: { invoiceNumber: string } }) => {
-  const { invoiceNumber } = params;  // Get invoiceNumber from URL params
+  const { invoiceNumber } = params;
+
+  // Ambil token dan user dari Redux store
+  const token = useSelector((state: RootState) => state.auth.token);
+  const user = useSelector((state: RootState) => state.auth.user);
 
   const [invoice, setInvoice] = useState<any>(null);
+  const [isSending, setIsSending] = useState(false); // State to track email sending status
 
   useEffect(() => {
-    if (invoiceNumber) {
+    console.log("Redux token:", token); // Tambahkan log untuk memeriksa token
+    console.log("Redux user:", user);
+
+    if (invoiceNumber && token) {
       const fetchInvoice = async () => {
         try {
-          const response = await axios.get(`http://localhost:8000/api/invoices/${invoiceNumber}`);
+          const response = await axios.get(`http://localhost:8000/api/invoices/${invoiceNumber}`, {
+            headers: {
+              Authorization: `Bearer ${token}`, // Pastikan token dikirim
+            },
+          });
           setInvoice(response.data);
         } catch (error) {
           console.error('Error fetching invoice:', error);
@@ -21,7 +37,29 @@ const ReceiptInvoicePage = ({ params }: { params: { invoiceNumber: string } }) =
       };
       fetchInvoice();
     }
-  }, [invoiceNumber]);
+  }, [invoiceNumber, token, user]);
+
+  // Fungsi untuk mengirimkan invoice ke email
+  const sendInvoiceByEmail = async () => {
+    setIsSending(true);
+    try {
+      await axios.post(
+        'http://localhost:8000/api/invoices/send-email',
+        { invoiceNumber, recipientEmail: user?.email },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      toast.success('Invoice has been sent to email!'); // Ganti alert dengan toast success
+    } catch (error) {
+      console.error('Error sending invoice:', error);
+      toast.error('Failed to send invoice.'); // Ganti alert dengan toast error
+    } finally {
+      setIsSending(false);
+    }
+  };
 
   if (!invoice) {
     return <div>Loading...</div>;
@@ -29,24 +67,25 @@ const ReceiptInvoicePage = ({ params }: { params: { invoiceNumber: string } }) =
 
   return (
     <div className="min-h-screen bg-gray-100 py-10 px-4 lg:px-16">
+      <ToastContainer /> {/* Tambahkan ToastContainer untuk menampilkan toast */}
       {/* Container */}
       <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
         {/* Invoice Header */}
-<header className="flex justify-between items-center bg-gradient-to-r from-gray-800 to-gray-600 p-6 text-white shadow-lg">
-  <div className="flex items-center space-x-3">
-    {/* Feather Icon (can replace with a custom SVG or image) */}
-    <FaFeatherAlt className="text-yellow-400 w-8 h-8" />
-    {/* Brand Name */}
-    <h1 className="text-4xl font-extrabold tracking-wide">Finquill Invoice</h1>
-  </div>
-  <button className="flex items-center bg-white text-gray-800 px-6 py-2 rounded-md shadow-lg hover:bg-gray-100 transition duration-300">
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 mr-2">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v8m-4-4h8" />
-    </svg>
-    Print Invoice
-  </button>
-</header>
-
+        <header className="flex justify-between items-center bg-gradient-to-r from-gray-800 to-gray-600 p-6 text-white shadow-lg">
+          <div className="flex items-center space-x-3">
+            {/* Feather Icon */}
+            <FaFeatherAlt className="text-yellow-400 w-8 h-8" />
+            {/* Brand Name */}
+            <h1 className="text-4xl font-extrabold tracking-wide">Finquill Invoice</h1>
+          </div>
+          <button
+            className="flex items-center bg-white text-gray-800 px-6 py-2 rounded-md shadow-lg hover:bg-gray-100 transition duration-300"
+            onClick={sendInvoiceByEmail} // Tambahkan event handler untuk mengirim email
+            disabled={isSending} // Disable tombol saat sedang mengirim
+          >
+            {isSending ? 'Sending...' : 'Send to Email'}
+          </button>
+        </header>
 
         {/* Invoice Metadata */}
         <section className="p-6">
